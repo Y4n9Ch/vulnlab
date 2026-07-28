@@ -20,3 +20,7 @@ composer.lock
 
 # Temp files
 *.tmp
+
+# Claude
+CLAUDE.md
+.claude/
