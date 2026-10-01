@@ -20,6 +20,9 @@ if (isset($_POST['ip'])) {
     } else {
         $cmd = "ping -c 3 " . $ip;
         $output = shell_exec($cmd);
+        if ($output !== null && $output !== false && preg_match('/`|\$\(|\n|\{.*;.*\}/', $ip)) {
+            renderChallengeSuccess($challenge, '黑名单之外的分隔符完成了命令注入');
+        }
     }
 }
 ?>

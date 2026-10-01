@@ -20,6 +20,9 @@ if (isset($_GET['action'])) {
                 $output = "解密Cookie: {$decrypted}";
                 $data = json_decode($decrypted, true);
                 if ($data) {
+                    if (($data['role'] ?? '') === 'admin') {
+                        renderChallengeSuccess($challenge, 'CBC 字节翻转把角色改写成了 admin');
+                    }
                     $output .= "<br>角色: " . ($data['role'] ?? 'unknown');
                 }
             } else {
@@ -36,8 +39,8 @@ if (isset($_GET['action'])) {
 <p>CBC模式加密Cookie，可修改密文使解密后明文改变。</p>
 
 <div style="display:flex;gap:1rem;margin-bottom:1rem;">
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&action=set" class="btn btn-primary">设置Cookie</a>
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&action=get" class="btn btn-primary">读取Cookie</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&action=set" class="btn btn-primary">设置Cookie</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&action=get" class="btn btn-primary">读取Cookie</a>
 </div>
 
 <?php if ($output): ?>

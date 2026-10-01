@@ -16,6 +16,9 @@ if (isset($_POST['ip'])) {
     } else {
         $cmd = "ping -c 3 " . $ip;
         $output = shell_exec($cmd);
+        if ($output !== null && $output !== false && preg_match('/\$\{?IFS\}|\t|</', $ip)) {
+            renderChallengeSuccess($challenge, '空格限制被替代字符绕过，注入命令得以执行');
+        }
     }
 }
 ?>

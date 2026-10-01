@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 模拟登录（无CSRF Token）
     if ($username && $password) {
+        renderChallengeSuccess($challenge, '无防护的登录接口被跨站绑定到攻击者账号');
         $_SESSION['csrf_login_user'] = $username;
         $output = "已登录为: {$username}";
     }
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="submit" class="btn btn-primary">登 录</button>
 </form>
 
+<?php renderLoginStatus('csrf_login_user'); ?>
 <?php if ($output): ?>
     <div class="result-box"><?= $output ?></div>
 <?php endif; ?>

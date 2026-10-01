@@ -7,7 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['code'])) {
     ob_start();
     try {
         eval($code);
-    } catch (Exception $e) {
+        renderChallengeSuccess($challenge, '提交的 PHP 代码被 eval 执行');
+    } catch (\Throwable $e) {
         echo 'Error: ' . $e->getMessage();
     }
     $output = ob_get_clean();

@@ -19,6 +19,7 @@ if ($filtered) {
 </form>
 
 <?php if ($search): ?>
+    <?php if (is_string($filtered) && preg_match('/<script\b|<[a-zA-Z][^<>]*\son\w+\s*=/i', $filtered)) renderChallengeSuccess($challenge, '过滤后的输出仍含可执行标记并被原样回显'); ?>
     <div class="result-box">
         搜索结果：<strong><?= $filtered ?></strong>
         <br><span style="color:var(--text-muted); font-size:0.8rem;">原始输入已过滤 script 标签</span>

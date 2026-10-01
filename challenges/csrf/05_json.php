@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         if ($data && isset($data['action'])) {
+            renderChallengeSuccess($challenge, '跨站 JSON 请求未校验内容类型即执行');
             $output = '操作已执行: ' . h($data['action']);
         }
     }
@@ -33,8 +34,18 @@ document.getElementById('apiForm').addEventListener('submit', function(e) {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: json
-    }).then(r => r.text()).then(t => {
-        document.querySelector('.result-box').innerHTML = t;
+    }).then(r => r.text()).then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const box = document.querySelector('.result-box');
+        const fresh = doc.querySelector('.result-box');
+        if (fresh) {
+            box.innerHTML = fresh.innerHTML;
+        } else {
+            box.innerHTML = '请求处理失败，请检查 JSON 格式后重试';
+        }
+    }).catch(() => {
+        const box = document.querySelector('.result-box');
+        if (box) box.innerHTML = '请求失败，请重试';
     });
 });
 </script>

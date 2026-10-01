@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
     $user = $_POST['username'];
     $pass = $_POST['password'];
     if (isset($hashes[$user]) && md5($pass) === $hashes[$user]) {
+        renderChallengeSuccess($challenge, 'MD5 哈希被彩虹表还原出明文口令');
         $msg = '<span style="color:var(--accent);">登录成功！</span>';
     } else {
         $msg = '<span style="color:var(--danger);">用户名或密码错误</span>';

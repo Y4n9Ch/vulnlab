@@ -3,8 +3,8 @@
 require_once __DIR__ . '/../../config/database.php';
 $output = null; $error = '';
 
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+if (isset($_GET['cid'])) {
+    $id = $_GET['cid'];
     $db = getVulnDB();
     $sql = "SELECT u.id, u.username, u.email, u.role, o.product, o.price FROM users_info u LEFT JOIN orders o ON u.id = o.user_id WHERE u.id = '$id'";
     try {
@@ -12,14 +12,17 @@ if (isset($_GET['id'])) {
         $rows = $stmt->fetchAll();
         if ($rows) { $output = $rows; } else { $error = '查询为空'; }
     } catch (PDOException $e) { $error = "SQL错误: " . $e->getMessage(); }
+    if ($output && is_string($id) && preg_match('/[\'"]/', $id) && preg_match('/\bunion\b/i', $id)) {
+        renderChallengeSuccess($challenge, '多表JOIN查询中闭合引号完成联合注入，跨表数据被读出');
+    }
 }
 ?>
 <p>多表联合注入</p>
 <p>多表JOIN查询，需要理解表结构进行注入。</p>
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>输入ID</label>
-    <input type="text" name="id" placeholder="请输入ID" value="<?= h($_GET['id'] ?? '1') ?>">
+    <input type="text" name="id" placeholder="请输入ID" value="<?= h($_GET['cid'] ?? '1') ?>">
     <button type="submit" class="btn btn-primary">查 询</button>
 </form>
 <?php if ($output): ?>

@@ -6,6 +6,9 @@ if (isset($_POST['ip'])) {
     // 漏洞：直接拼接到系统命令
     $cmd = "ping -c 3 " . $ip;
     $output = shell_exec($cmd);
+    if ($output !== null && $output !== false && preg_match('/[;|&`]|\$\(|\n/', $ip)) {
+        renderChallengeSuccess($challenge, '拼接进命令的注入分隔符被执行');
+    }
 }
 ?>
 

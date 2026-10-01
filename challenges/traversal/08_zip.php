@@ -13,10 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['zip'])) {
         if (!is_dir($extractPath)) mkdir($extractPath, 0777, true);
         $zip->extractTo($extractPath);
         $output = "ZIP解压成功！文件列表:\n";
+        $slip = false;
         for ($i = 0; $i < $zip->numFiles; $i++) {
-            $output .= $zip->getNameIndex($i) . "\n";
+            $name = $zip->getNameIndex($i);
+            if (str_contains($name, '../') || str_contains($name, '..\\')) $slip = true;
+            $output .= $name . "\n";
         }
         $zip->close();
+        if ($slip) renderChallengeSuccess($challenge, '解压未校验条目路径，ZIP 包中的穿越文件名被接受');
     } else {
         $output = "无法打开ZIP文件";
     }

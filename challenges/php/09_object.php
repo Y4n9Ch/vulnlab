@@ -35,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 漏洞：反序列化用户输入
         $obj = @unserialize($data);
         if ($obj) {
+            if ($obj instanceof FileHandler || $obj instanceof Logger) {
+                renderChallengeSuccess($challenge, '对象注入触发了受控的魔术方法');
+            }
             $output = "反序列化成功: " . get_class($obj);
         } else {
             $output = "反序列化失败";

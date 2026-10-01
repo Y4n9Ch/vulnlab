@@ -11,6 +11,7 @@ $search = $_GET['q'] ?? $_POST['q'] ?? '';
 </form>
 
 <?php if ($search): ?>
+    <?php if (is_string($search) && preg_match('/<[a-zA-Z!\/]/', $search)) renderChallengeSuccess($challenge, '搜索词未经转义被原样回显到 HTML 上下文'); ?>
     <div class="result-box">
         搜索结果：未找到 "<strong><?= $search ?></strong>" 的相关内容
     </div>

@@ -7,15 +7,21 @@ if (isset($_POST['template'])) {
     // 模拟简单的模板引擎
     $result = $tpl;
     // 替换 {{表达式}}
-    $result = preg_replace_callback('/\{\{(.+?)\}\}/s', function($m) {
+    $executed = false;
+    $result = preg_replace_callback('/\{\{(.+?)\}\}/s', function($m) use (&$executed) {
         try {
             ob_start();
             eval('echo ' . $m[1] . ';');
-            return ob_get_clean();
-        } catch (Exception $e) {
+            $out = ob_get_clean();
+            if (trim($out) !== '') $executed = true;
+            return $out;
+        } catch (\Throwable $e) {
             return '[Error]';
         }
     }, $result);
+    if ($executed) {
+        renderChallengeSuccess($challenge, '模板表达式被引擎当作代码求值');
+    }
 }
 ?>
 

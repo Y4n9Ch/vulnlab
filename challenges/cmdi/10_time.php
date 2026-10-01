@@ -8,6 +8,9 @@ if (isset($_GET['cmd'])) {
     @shell_exec($cmd . ' 2>/dev/null');
     $elapsed = microtime(true) - $start;
     $output = "命令执行完成，耗时: " . round($elapsed, 2) . " 秒";
+    if ($elapsed >= 2) {
+        renderChallengeSuccess($challenge, '注入的命令产生了可观测的执行延迟');
+    }
 }
 ?>
 
@@ -15,7 +18,7 @@ if (isset($_GET['cmd'])) {
 <p>命令执行结果不回显，只能通过时间延迟判断命令是否执行成功。</p>
 
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>检测命令</label>
     <input type="text" name="cmd" placeholder="输入命令" value="<?= h($_GET['cmd'] ?? '') ?>">
     <button type="submit" class="btn btn-primary">检 测</button>

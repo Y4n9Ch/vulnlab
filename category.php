@@ -31,6 +31,20 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </div>
 
+    <?php $prereq = categoryPrerequisite($cat); ?>
+    <div class="category-prereq">
+        <div class="prereq-header">
+            <span class="prereq-badge">💡 先修学习建议</span>
+            <span class="prereq-summary"><?= h($prereq['summary']) ?></span>
+        </div>
+        <div class="prereq-topics">
+            <span class="prereq-label">建议前置掌握：</span>
+            <?php foreach ($prereq['topics'] as $topic): ?>
+                <span class="prereq-tag"><?= h($topic) ?></span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
     <div class="challenge-toolbar">
         <label class="search-field"><span aria-hidden="true">⌕</span><input id="challengeSearch" type="search" aria-label="搜索题目" placeholder="搜索题目" autocomplete="off"></label>
         <div class="segmented-control" aria-label="题目难度筛选">
@@ -44,7 +58,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="challenge-list" id="challengeList">
         <?php foreach ($challenges as $i => $ch): ?>
             <?php $solved = isset($solvedChallengeIds[(int) $ch['id']]); ?>
-            <a href="/challenge.php?id=<?= $ch['id'] ?>" class="challenge-item <?= $solved ? 'solved' : '' ?>" data-title="<?= h($ch['title'] . ' ' . $ch['description']) ?>" data-difficulty="<?= h($ch['difficulty']) ?>">
+            <a href="/challenge.php?cid=<?= $ch['id'] ?>" class="challenge-item <?= $solved ? 'solved' : '' ?>" data-title="<?= h($ch['title'] . ' ' . $ch['description']) ?>" data-difficulty="<?= h($ch['difficulty']) ?>">
                 <div class="challenge-status">
                     <?= $solved ? '<span class="status-icon solved-icon">✓</span>' : '<span class="status-icon unsolved-icon">' . ($i + 1) . '</span>' ?>
                 </div>

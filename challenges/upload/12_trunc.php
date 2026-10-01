@@ -15,7 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $output = "不允许的文件类型: {$ext}";
     } else {
         $target = 'uploads/' . $saveName;
-        move_uploaded_file($file['tmp_name'], $target);
+        if (str_contains($saveName, "\0")) {
+            renderChallengeSuccess($challenge, '空字节截断构造被接受为保存文件名');
+        }
+        try {
+            move_uploaded_file($file['tmp_name'], $target);
+        } catch (\ValueError $e) {
+            // PHP 8 对含空字节的路径抛出 ValueError，这里模拟旧版截断行为避免整页崩溃
+        }
         $output = "文件保存为: {$target}";
     }
 }

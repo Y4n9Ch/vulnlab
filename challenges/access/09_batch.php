@@ -12,6 +12,7 @@ $orders = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     $ids = $_POST['ids'] ?? '';
+    $exploited = false;
 
     if ($action === 'delete' && $ids) {
         $idList = explode(',', $ids);
@@ -19,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($idList as $id) {
             $id = intval($id);
             // 漏洞：未验证订单归属权
+            if ($id > 0 && $id !== 1) $exploited = true;
             $deleted[] = $id;
         }
         $output = "已删除订单: " . implode(', ', $deleted);
@@ -28,10 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $output = "导出订单数据:\n";
         foreach ($orders as $order) {
             if (in_array($order['id'], $idList)) {
+                if ($order['user'] !== 'user1') $exploited = true;
                 $output .= "ID: {$order['id']}, 用户: {$order['user']}, 产品: {$order['product']}, 价格: {$order['price']}\n";
             }
         }
     }
+    if ($exploited) renderChallengeSuccess($challenge, '批量操作未验证归属权，越权处理了其他用户的订单');
 }
 ?>
 

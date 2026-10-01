@@ -16,13 +16,14 @@ if ($id > 0) {
 <p>通过URL参数中的ID获取用户信息，未验证权限。</p>
 
 <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&uid=1" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户1</a>
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&uid=2" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户2</a>
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&uid=3" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户3</a>
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&uid=4" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户4</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&uid=1" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户1</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&uid=2" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户2</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&uid=3" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户3</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&uid=4" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">用户4</a>
 </div>
 
 <?php if ($result): ?>
+    <?php if ($result['role'] === 'admin') renderChallengeSuccess($challenge, '越权读取到了管理员账号的信息'); ?>
     <div class="result-box">
         <table>
             <tr><th>字段</th><th>值</th></tr>

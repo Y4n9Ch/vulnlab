@@ -8,6 +8,7 @@ $names = categoryNames();
 $icons = categoryIcons();
 $descriptions = categoryDescriptions();
 $skills = categorySkills();
+$prereqs = categoryPrerequisites();
 $userStats = isLoggedIn() ? getUserStats($_SESSION['user_id']) : [];
 $totalChallenges = array_sum($stats);
 $totalSolved = array_sum($userStats);
@@ -23,7 +24,7 @@ $nextChallenge = isLoggedIn() ? getNextUnsolvedChallenge($_SESSION['user_id']) :
             <p>按能力路径推进，也可以直接进入一个漏洞分类。每次练习先建立正常请求基线，再验证一个清晰假设。</p>
         </div>
         <?php if ($nextChallenge): ?>
-            <a class="continue-panel" href="/challenge.php?id=<?= (int) $nextChallenge['id'] ?>">
+            <a class="continue-panel" href="/challenge.php?cid=<?= (int) $nextChallenge['id'] ?>">
                 <span>继续训练</span>
                 <strong><?= h($nextChallenge['title']) ?></strong>
                 <small><?= h($names[$nextChallenge['category']] ?? $nextChallenge['category']) ?> · <?= difficultyLabel($nextChallenge['difficulty']) ?></small>
@@ -101,12 +102,21 @@ $nextChallenge = isLoggedIn() ? getNextUnsolvedChallenge($_SESSION['user_id']) :
                 $solved = $userStats[$key] ?? 0;
                 $catProgress = $total > 0 ? round($solved / $total * 100) : 0;
                 $diffs = array_keys($difficultyStats[$key] ?? []);
-                $searchText = $name . ' ' . implode(' ', $skills[$key] ?? []);
+                $prereqItem = $prereqs[$key] ?? null;
+                $prereqSummary = $prereqItem['summary'] ?? '';
+                $prereqTopics = $prereqItem['topics'] ?? [];
+                $searchText = $name . ' ' . implode(' ', $skills[$key] ?? []) . ' ' . $prereqSummary . ' ' . implode(' ', $prereqTopics);
                 ?>
                 <a href="/category.php?cat=<?= h($key) ?>" class="category-card" data-search="<?= h($searchText) ?>" data-difficulties="<?= h(implode(' ', $diffs)) ?>">
                     <div class="category-card-head"><span class="card-icon"><?= $icons[$key] ?? '◇' ?></span><span class="card-count"><?= $total ?> 题</span></div>
                     <div class="card-title"><?= h($name) ?></div>
                     <p class="card-description"><?= h($descriptions[$key] ?? '') ?></p>
+                    <?php if ($prereqSummary): ?>
+                        <div class="card-prereq">
+                            <span class="card-prereq-badge">先修建议</span>
+                            <span class="card-prereq-text"><?= h($prereqSummary) ?></span>
+                        </div>
+                    <?php endif; ?>
                     <div class="card-skills">
                         <?php foreach (($skills[$key] ?? []) as $skill): ?><span><?= h($skill) ?></span><?php endforeach; ?>
                     </div>

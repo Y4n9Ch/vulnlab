@@ -11,6 +11,7 @@ if (isset($_GET['page'])) {
         $role = $_SERVER['HTTP_X_ROLE'] ?? 'user';
 
         if ($role === 'admin' || $ip === '127.0.0.1') {
+            renderChallengeSuccess($challenge, '伪造的请求头被服务端当作可信身份');
             $output = "管理员面板内容（欢迎，{$role}用户，IP: {$ip}）";
         } else {
             $output = "403 Forbidden - IP: {$ip}, Role: {$role}";
@@ -25,7 +26,7 @@ if (isset($_GET['page'])) {
 <p>服务器信任客户端请求头判断身份，可伪造请求头绕过。</p>
 
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>页面</label>
     <select name="page">
         <option value="home">首页</option>

@@ -7,6 +7,9 @@ if ($page) {
     // 漏洞：允许包含远程URL
     // 注：实际环境中需要 allow_url_include=On
     $content = @file_get_contents($page);
+    if ($content !== false && preg_match('#^(https?|ftp|data)://#i', $page)) {
+        renderChallengeSuccess($challenge, '远程内容被服务端加载执行');
+    }
     if ($content === false) {
         $content = '无法加载：' . h($page);
     }
@@ -17,7 +20,7 @@ if ($page) {
 <p>支持从远程URL加载内容，可被利用包含恶意脚本。</p>
 
 <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&page=http://example.com" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">示例外部页面</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&page=http://example.com" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">示例外部页面</a>
 </div>
 
 <?php if ($content): ?>

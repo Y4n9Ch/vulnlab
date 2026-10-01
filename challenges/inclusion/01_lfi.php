@@ -8,6 +8,9 @@ if ($page) {
     $file = $page;
     if (file_exists($file)) {
         $content = file_get_contents($file);
+        if (escapedBaseDir($file, getcwd() . '/pages')) {
+            renderChallengeSuccess($challenge, '包含路径越出了页面目录，读到了任意文件');
+        }
     } else {
         $content = '文件不存在：' . $file;
     }
@@ -18,9 +21,9 @@ if ($page) {
 <p>通过URL参数加载本地文件，未限制路径。</p>
 
 <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&page=pages/home.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">首页</a>
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&page=pages/about.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">关于</a>
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&page=pages/contact.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">联系</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&page=pages/home.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">首页</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&page=pages/about.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">关于</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&page=pages/contact.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">联系</a>
 </div>
 
 <?php if ($content): ?>

@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (preg_match('/\.' . preg_quote($baseDomain, '/') . '$/', $origin) || $origin === $host) {
         if (isset($_POST['password'])) {
+            renderChallengeSuccess($challenge, '宽松的子域信任让跨站请求通过了 Origin 校验');
             $output = '密码已修改为: ' . h($_POST['password']);
         }
     } else {

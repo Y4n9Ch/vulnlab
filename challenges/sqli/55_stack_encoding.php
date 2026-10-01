@@ -3,8 +3,8 @@
 require_once __DIR__ . '/../../config/database.php';
 $output = null; $error = '';
 
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+if (isset($_GET['cid'])) {
+    $id = $_GET['cid'];
     $db = getVulnDB();
     $sql = "SELECT * FROM users_info WHERE id = '$id'";
     try {
@@ -24,14 +24,17 @@ if (isset($_GET['id'])) {
         }
         if ($output === null && isset($rows)) $output = $rows;
     } catch (PDOException $e) { $error = "SQL错误: " . $e->getMessage(); }
+    if (is_string($id) && strpos($id, ';') !== false && $output && empty($error)) {
+        renderChallengeSuccess($challenge, '堆叠的第二条语句执行成功，字符集与多语句注入成立');
+    }
 }
 ?>
 <p>堆叠+字符集注入</p>
 <p>支持多语句执行，可修改字符集辅助注入。</p>
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>输入ID</label>
-    <input type="text" name="id" placeholder="请输入ID" value="<?= h($_GET['id'] ?? '1') ?>">
+    <input type="text" name="id" placeholder="请输入ID" value="<?= h($_GET['cid'] ?? '1') ?>">
     <button type="submit" class="btn btn-primary">查 询</button>
 </form>
 <?php if ($output): ?>

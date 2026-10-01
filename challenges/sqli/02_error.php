@@ -17,6 +17,9 @@ if (isset($_POST['username'])) {
     } catch (PDOException $e) {
         $result = 'error:' . $e->getMessage();
     }
+    if (is_string($result) && strpos($result, 'error:') === 0 && is_string($user) && preg_match('/(extractvalue|updatexml|floor\s*\(|exp\s*\()/i', $user)) {
+        renderChallengeSuccess($challenge, '报错函数触发的SQL错误回显了查询结果，报错注入成立');
+    }
 }
 ?>
 

@@ -7,8 +7,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['content'])) {
     $content = $_POST['content'];
     $username = $_SESSION['username'] ?? 'anonymous';
     // 漏洞：未过滤直接存入数据库
-    $stmt = $db->prepare("INSERT INTO messages (username, content) VALUES (?, ?)");
-    $stmt->execute([$username, $content]);
+    try {
+        $stmt = $db->prepare("INSERT INTO messages (username, content) VALUES (?, ?)");
+        $stmt->execute([$username, $content]);
+    } catch (PDOException $e) {
+        // 留言表结构异常时避免整页崩溃
+        error_log('messages insert failed: ' . $e->getMessage());
+    }
+    if (is_string($content) && preg_match('/<[a-zA-Z!\/]/', $content)) {
+        renderChallengeSuccess($challenge, '含标签的留言被原样存入数据库并回显给所有用户');
+    }
 }
 
 // 获取所有留言

@@ -14,6 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $newName = uniqid() . '.' . $ext;
         $dest = __DIR__ . '/../../uploads/' . $newName;
         if (move_uploaded_file($file['tmp_name'], $dest)) {
+            if (preg_match('/^(phtml|pht|phar|phps|shtml|inc|htaccess)$/i', $ext) || str_contains($ext, 'php')) {
+                renderChallengeSuccess($challenge, '黑名单之外的脚本扩展名被放行');
+            }
             $msg = '<span style="color:var(--accent);">上传成功！' . h($newName) . '</span>';
         } else {
             $msg = '<span style="color:var(--danger);">上传失败</span>';

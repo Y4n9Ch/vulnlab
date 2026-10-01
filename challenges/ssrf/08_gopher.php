@@ -14,6 +14,9 @@ if (isset($_GET['url'])) {
     $error = curl_error($ch);
     curl_close($ch);
 
+    if (!$error && preg_match('#^gopher://#i', $url)) {
+        renderChallengeSuccess($challenge, 'gopher 协议请求被服务端代发到内网服务');
+    }
     if ($error) {
         $output = "错误: " . $error;
     }
@@ -24,7 +27,7 @@ if (isset($_GET['url'])) {
 <p>只禁止了file://协议，可使用gopher://协议攻击内网服务。</p>
 
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>URL地址</label>
     <input type="text" name="url" placeholder="http://example.com" value="<?= h($_GET['url'] ?? '') ?>">
     <button type="submit" class="btn btn-primary">获 取</button>

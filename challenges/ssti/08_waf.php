@@ -18,8 +18,15 @@ if (isset($_POST['template'])) {
         $result = $template;
         if (preg_match('/\{\{(.+?)\}\}/', $result, $matches)) {
             $expr = $matches[1];
-            $evalResult = @eval("return {$expr};");
-            $result = str_replace($matches[0], $evalResult, $result);
+            try {
+                $evalResult = eval("return {$expr};");
+                if ($evalResult !== null) {
+                    renderChallengeSuccess($challenge, 'WAF 未覆盖的函数调用完成表达式求值');
+                }
+                $result = str_replace($matches[0], $evalResult, $result);
+            } catch (\Throwable $e) {
+                $result = str_replace($matches[0], '[Render Error]', $result);
+            }
         }
         $output = $result;
     }

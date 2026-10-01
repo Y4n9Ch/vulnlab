@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         parse_str($query);
 
         if ($auth) {
+            renderChallengeSuccess($challenge, 'parse_str 覆盖了认证状态变量');
             $output = "认证成功！角色: {$role}";
         } else {
             $output = "未认证。auth=" . var_export($auth, true) . ", role={$role}";
@@ -24,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 <p>parse_str函数可覆盖已有变量，实现认证绕过。</p>
 
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>查询字符串</label>
     <input type="text" name="query" placeholder="例如：auth=1&role=admin" value="<?= h($_GET['query'] ?? '') ?>">
     <button type="submit" class="btn btn-primary">解 析</button>

@@ -1,6 +1,7 @@
 <?php
 // 弱口令
 $msg = null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['password'])) {
     $user = $_POST['username'];
     $pass = $_POST['password'];
@@ -11,11 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
         'test' => ['test', 'test123', '123456'],
     ];
     if (isset($weakPasswords[$user]) && in_array($pass, $weakPasswords[$user])) {
+        renderChallengeSuccess($challenge, '常见弱口令组合通过了认证');
+        $_SESSION['auth01_user'] = (string) $user;
         $msg = '<span style="color:var(--accent);">登录成功！欢迎 ' . h($user) . '</span>';
     } else {
         $msg = '<span style="color:var(--danger);">用户名或密码错误</span>';
     }
 }
+
+// 登录状态条放在登录处理之后渲染，保证本次登录立即生效
+renderLoginStatus('auth01_user');
 ?>
 
 <p>后台登录（弱口令漏洞）</p>

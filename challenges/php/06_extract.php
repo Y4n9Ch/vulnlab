@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     extract($_POST);
 
     if ($admin) {
+        renderChallengeSuccess($challenge, 'extract 把请求字段覆盖成了内部配置');
         $output = "管理员模式已启用！";
     } elseif ($debug) {
         $output = "调试模式: " . phpinfo();

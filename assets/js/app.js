@@ -1,15 +1,3 @@
-function toggleIntro() {
-    var content = document.getElementById('introContent');
-    var toggle = document.getElementById('introToggle');
-    if (content.style.display === 'none') {
-        content.style.display = 'block';
-        toggle.classList.add('open');
-    } else {
-        content.style.display = 'none';
-        toggle.classList.remove('open');
-    }
-}
-
 function submitFlag(e, challengeId) {
     e.preventDefault();
     var input = document.getElementById('flagInput');
@@ -27,7 +15,7 @@ function submitFlag(e, challengeId) {
     formData.append('challenge_id', challengeId);
     formData.append('flag', flag);
     formData.append('csrf_token', csrfToken ? csrfToken.value : '');
-    fetch('/challenge.php?id=' + challengeId, {
+    fetch('/challenge.php?cid=' + challengeId, {
         method: 'POST',
         body: formData
     })
@@ -42,7 +30,7 @@ function submitFlag(e, challengeId) {
         result.className = 'flag-result ' + (data.success ? 'success' : 'error');
         if (data.success) {
             input.value = '';
-            setTimeout(function() { location.reload(); }, 1200);
+            setTimeout(function() { location.reload(); }, 1500);
         }
     })
     .catch(function(error) {
@@ -55,11 +43,62 @@ function submitFlag(e, challengeId) {
     });
 }
 
-function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+function fallbackCopy(text) {
+    var area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    document.body.removeChild(area);
+    return ok;
 }
+
+// 点击带 data-copy（直接文本）或 data-copy-target（CSS 选择器）的按钮时复制内容
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-copy], [data-copy-target]');
+    if (!btn) return;
+
+    var text = btn.dataset.copy;
+    if (!text && btn.dataset.copyTarget) {
+        var el = document.querySelector(btn.dataset.copyTarget);
+        text = el ? el.textContent : '';
+    }
+    if (!text) return;
+
+    var finish = function(ok) {
+        if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+        btn.textContent = ok ? '已复制 ✓' : '复制失败';
+        btn.classList.toggle('copied', ok);
+        setTimeout(function() {
+            btn.textContent = btn.dataset.label;
+            btn.classList.remove('copied');
+        }, 1500);
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(
+            function() { finish(true); },
+            function() { finish(fallbackCopy(text)); }
+        );
+    } else {
+        finish(fallbackCopy(text));
+    }
+});
+
+// 题目模拟登录的退出按钮：无刷新清除登录状态条
+document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[data-logout="1"]');
+    if (!link) return;
+    e.preventDefault();
+    fetch(link.href).then(function() {
+        var status = link.closest('.login-status');
+        if (status) status.remove();
+    });
+});
 
 function setupCatalogFilter() {
     var search = document.getElementById('categorySearch');
@@ -140,6 +179,10 @@ document.addEventListener('DOMContentLoaded', function() {
             var open = content.classList.toggle('open');
             if (button.classList.contains('hint-toggle')) {
                 button.parentElement.classList.toggle('open', open);
+            }
+            if (button.dataset.altLabel) {
+                if (!button.dataset.label) button.dataset.label = button.textContent;
+                button.textContent = open ? button.dataset.altLabel : button.dataset.label;
             }
             button.setAttribute('aria-expanded', open ? 'true' : 'false');
         });

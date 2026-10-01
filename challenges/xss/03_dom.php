@@ -1,5 +1,9 @@
 <?php
 // DOM型XSS - 纯前端漏洞
+$nameParam = $_GET['name'] ?? '';
+if (is_string($nameParam) && preg_match('/<[a-zA-Z!\/]/', $nameParam)) {
+    renderChallengeSuccess($challenge, 'name 参数中的标记被原样交给了前端 innerHTML');
+}
 ?>
 <p>个人主页（存在DOM型XSS）</p>
 <p>页面JavaScript从URL参数读取用户名并直接写入DOM，不经过服务端。</p>
@@ -8,7 +12,7 @@
     <span style="color:var(--text-muted);">欢迎访问！请通过URL参数 name 指定用户名。</span>
 </div>
 
-<p>示例链接：<code>?id=<?= h($_GET['id'] ?? '') ?>&name=guest</code></p>
+<p>示例链接：<code>?id=<?= h($_GET['cid'] ?? '') ?>&name=guest</code></p>
 
 <script>
 // 漏洞代码：直接从URL取值写入DOM

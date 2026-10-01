@@ -30,6 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['data'])) {
     $data = $_POST['data'];
     $obj = @unserialize($data);
     if ($obj) {
+        if ($obj instanceof Logger || $obj instanceof FileHandler) {
+            renderChallengeSuccess($challenge, '魔术方法链随对象恢复被自动触发');
+        }
         $result = '反序列化成功，对象类型：' . h(get_class($obj));
     } else {
         $result = '<span style="color:var(--danger);">反序列化失败</span>';

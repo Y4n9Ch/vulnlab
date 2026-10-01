@@ -9,6 +9,9 @@ if ($page) {
     $file = $page;
     if (file_exists($file)) {
         $content = file_get_contents($file);
+        if (str_contains($file, '../') || escapedBaseDir($file, getcwd() . '/pages')) {
+            renderChallengeSuccess($challenge, '单次替换过滤被绕过，包含越出了页面目录');
+        }
     } else {
         $content = '文件不存在：' . $file;
     }
@@ -19,8 +22,8 @@ if ($page) {
 <p>后端过滤了 ../ 路径穿越符，但只替换一次。</p>
 
 <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&page=pages/home.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">首页</a>
-    <a href="?id=<?= h($_GET['id'] ?? '') ?>&page=pages/about.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">关于</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&page=pages/home.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">首页</a>
+    <a href="?id=<?= h($_GET['cid'] ?? '') ?>&page=pages/about.php" class="btn" style="background:var(--bg-secondary); color:var(--text-secondary);">关于</a>
 </div>
 
 <?php if ($content): ?>

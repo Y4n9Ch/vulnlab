@@ -21,6 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $newName = uniqid() . '.' . $ext;
         $dest = __DIR__ . '/../../uploads/' . $newName;
         if (move_uploaded_file($file['tmp_name'], $dest)) {
+            if (preg_match('/^(php\d*|phtml|pht)$/i', $ext)) {
+                renderChallengeSuccess($challenge, '伪装成图片的脚本文件通过了文件头检查');
+            }
             $msg = '<span style="color:var(--accent);">上传成功！' . h($newName) . '</span>';
         } else {
             $msg = '<span style="color:var(--danger);">上传失败</span>';

@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $captcha = $_POST['captcha'] ?? '';
     if ($captcha == $_SESSION['csrf_captcha']) {
         if (isset($_POST['action'])) {
+            renderChallengeSuccess($challenge, '验证后未失效的验证码被跨站重复使用');
             $output = '操作执行成功: ' . h($_POST['action']);
         }
         $_SESSION['csrf_captcha'] = rand(1000, 9999);

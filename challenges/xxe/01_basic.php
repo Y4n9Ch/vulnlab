@@ -8,6 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['xml'])) {
     $doc = new DOMDocument();
     @$doc->loadXML($xml, LIBXML_NOENT | LIBXML_DTDLOAD);
     $result = $doc->saveXML();
+    if ($result !== false && preg_match('/<!DOCTYPE.*<!ENTITY/is', $xml)) {
+        renderChallengeSuccess($challenge, '带外部实体定义的 XML 被解析器接受并展开');
+    }
 }
 ?>
 

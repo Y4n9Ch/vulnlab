@@ -16,6 +16,7 @@ if (isset($_POST['data'])) {
         $data = unserialize($_POST['data']);
         if (is_array($data)) {
             $_SESSION = array_merge($_SESSION, $data);
+            renderChallengeSuccess($challenge, 'Session 数据被注入的序列化内容覆盖');
         }
         $output = "Session已更新 (php_serialize格式): " . serialize($_SESSION);
     }
@@ -26,7 +27,7 @@ if (isset($_POST['data'])) {
 <p>PHP有多种Session序列化处理器，格式差异可导致反序列化攻击。</p>
 
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>处理器类型</label>
     <select name="handler">
         <option value="php" <?= ($handler ?? '') === 'php' ? 'selected' : '' ?>>php</option>

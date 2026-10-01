@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['data'])) {
     // 漏洞：直接反序列化用户输入
     $obj = @unserialize($data);
     if ($obj) {
+        if ($obj instanceof UserProfile && $obj->log !== '') {
+            renderChallengeSuccess($challenge, '受控属性随对象析构写入了服务器文件');
+        }
         $result = '<span style="color:var(--accent);">反序列化成功！用户名：' . h($obj->username ?? 'N/A') . '，角色：' . h($obj->role ?? 'N/A') . '</span>';
     } else {
         $result = '<span style="color:var(--danger);">反序列化失败</span>';

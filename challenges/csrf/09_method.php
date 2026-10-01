@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // POST处理删除操作
     if (isset($_POST['id'])) {
+        renderChallengeSuccess($challenge, '破坏性操作未校验请求来源即执行');
         $output = '删除操作执行成功，ID: ' . h($_POST['id']);
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {

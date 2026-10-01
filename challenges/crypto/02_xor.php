@@ -29,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
     if ($_POST['action'] === 'decrypt' && isset($_POST['ciphertext'])) {
         $decrypted = xor_decrypt($_POST['ciphertext'], $key);
+        if ($decrypted !== '') {
+            renderChallengeSuccess($challenge, '短密钥 XOR 密文被直接解开');
+        }
         $msg = '<span style="color:var(--accent);">解密结果：' . h($decrypted) . '</span>';
     }
 }

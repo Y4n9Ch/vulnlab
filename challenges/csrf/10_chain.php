@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $output[] = '步骤2: 请求密码重置到新邮箱 ' . h($_SESSION['csrf_email'] ?? '');
             break;
         case '3':
+            renderChallengeSuccess($challenge, '链式 CSRF 完成了从改邮箱到接管账户的全程');
             $output[] = '步骤3: 验证邮箱 ' . h($_SESSION['csrf_email'] ?? '');
             $output[] = '攻击完成！攻击者现在可以重置密码了。';
             break;

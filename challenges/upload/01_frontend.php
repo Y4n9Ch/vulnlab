@@ -11,6 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     // 漏洞：后端完全没有验证，只有前端JS校验
     if (move_uploaded_file($file['tmp_name'], $dest)) {
+        if (preg_match('/^(php\d*|phtml|pht|phps)$/i', $ext)) {
+            renderChallengeSuccess($challenge, '可执行脚本文件被后端直接保存到上传目录');
+        }
         $uploaded = '/uploads/' . $newName;
         $msg = '<span style="color:var(--accent);">上传成功！文件路径：' . h($uploaded) . '</span>';
         // 记录

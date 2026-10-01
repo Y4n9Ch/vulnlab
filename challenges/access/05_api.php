@@ -18,8 +18,8 @@ if (isset($_GET['api'])) {
     // 漏洞：API无需认证即可访问
     if ($api === 'users') {
         echo json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    } elseif ($api === 'user' && isset($_GET['id'])) {
-        $id = intval($_GET['id']);
+    } elseif ($api === 'user' && isset($_GET['cid'])) {
+        $id = intval($_GET['cid']);
         if (isset($users[$id])) {
             echo json_encode($users[$id], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } else {
@@ -27,6 +27,7 @@ if (isset($_GET['api'])) {
         }
     } elseif ($api === 'admin') {
         // 敏感API，但仍无认证
+        renderChallengeSuccess($challenge, '未认证直接调用了管理 API');
         echo json_encode(['message' => '管理后台数据', 'flag' => 'admin_api_exposed']);
     }
     exit;
@@ -39,9 +40,9 @@ if (isset($_GET['api'])) {
 <div style="margin-bottom:1rem;">
     <h4>API端点</h4>
     <ul>
-        <li><a href="?id=<?= h($_GET['id'] ?? '') ?>&api=users">GET /api/users</a> - 获取所有用户</li>
-        <li><a href="?id=<?= h($_GET['id'] ?? '') ?>&api=user&id=1">GET /api/user/1</a> - 获取单个用户</li>
-        <li><a href="?id=<?= h($_GET['id'] ?? '') ?>&api=admin">GET /api/admin</a> - 管理接口</li>
+        <li><a href="?id=<?= h($_GET['cid'] ?? '') ?>&api=users">GET /api/users</a> - 获取所有用户</li>
+        <li><a href="?id=<?= h($_GET['cid'] ?? '') ?>&api=user&id=1">GET /api/user/1</a> - 获取单个用户</li>
+        <li><a href="?id=<?= h($_GET['cid'] ?? '') ?>&api=admin">GET /api/admin</a> - 管理接口</li>
     </ul>
 </div>
 

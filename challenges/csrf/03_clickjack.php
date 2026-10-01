@@ -1,7 +1,17 @@
 <?php
 // 点击劫持 - 页面可被iframe嵌入
 // 注意：故意不设置 X-Frame-Options 头
+if (isset($_GET['framed'])) {
+    renderChallengeSuccess($challenge, '页面被第三方页面 iframe 嵌入且未设置防嵌头');
+}
 ?>
+<script>
+if (window.self !== window.top) {
+    var params = new URLSearchParams(location.search);
+    params.set('framed', '1');
+    new Image().src = '?' + params.toString();
+}
+</script>
 <p>用户设置页面（存在点击劫持漏洞）</p>
 <p>该页面没有设置 X-Frame-Options 或 CSP frame-ancestors 头，可以被任意页面通过iframe嵌入。</p>
 

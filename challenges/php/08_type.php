@@ -11,6 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 漏洞：松散比较
     if ($input_hash == $correct_hash) {
+        if ($input_hash !== $correct_hash) {
+            renderChallengeSuccess($challenge, '松散比较被类型差异绕过');
+        }
         $output = "密码验证成功！";
     } else {
         $output = "密码错误！哈希值: {$correct_hash}";

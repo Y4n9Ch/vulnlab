@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? h($pageTitle) . ' - ' : '' ?>VulnLab 安全靶场</title>
+    <meta name="description" content="VulnLab 本地 Web 安全训练靶场，仅用于授权的学习与练习场景。">
+    <meta name="theme-color" content="#f8fafc">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23ffffff' stroke='%23e2e8f0' stroke-width='2'/%3E%3Ctext x='32' y='46' font-size='34' text-anchor='middle' fill='%230284c7'%3E%E2%98%A0%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="/assets/css/style.css?v=<?= (int) filemtime(__DIR__ . '/../assets/css/style.css') ?>">
 </head>
 <body>

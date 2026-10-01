@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 只检查Referer是否包含当前域名
     if (strpos($referer, $host) !== false) {
         if (isset($_POST['email'])) {
+            renderChallengeSuccess($challenge, '子串匹配的 Referer 校验被绕过并完成修改');
             $success = true;
         }
     } else {

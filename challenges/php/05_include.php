@@ -8,6 +8,7 @@ if (isset($_GET['func'])) {
     if (in_array($func, $allowed)) {
         $input = $_GET['input'] ?? '';
         $output = $func($input);
+        renderChallengeSuccess($challenge, '动态函数调用按受控函数名执行');
     } else {
         // 漏洞：错误信息泄露
         $output = "函数 {$func} 不在白名单中。允许的函数: " . implode(', ', $allowed);
@@ -19,7 +20,7 @@ if (isset($_GET['func'])) {
 <p>白名单可被枚举，且错误信息泄露了允许的函数列表。</p>
 
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>函数名</label>
     <input type="text" name="func" placeholder="函数名" value="<?= h($_GET['func'] ?? '') ?>">
     <label>参数</label>

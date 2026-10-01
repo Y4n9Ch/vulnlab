@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 验证Token（但Token可预测）
     if ($submittedToken === $token) {
+        renderChallengeSuccess($challenge, '可预测的 CSRF Token 被攻击者推导并复用');
         $msg = '<span style="color:var(--accent);">密码已修改为：' . h($newpass) . '</span>';
     } else {
         $msg = '<span style="color:var(--danger);">Token验证失败！</span>';

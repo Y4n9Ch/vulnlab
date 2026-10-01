@@ -3,6 +3,7 @@
 $msg = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['newpass'])) {
     $newpass = $_POST['newpass'];
+    renderChallengeSuccess($challenge, '无 CSRF 防护的状态变更请求被受理');
     $msg = '<span style="color:var(--accent);">密码已修改为：' . h($newpass) . '</span>';
 }
 ?>

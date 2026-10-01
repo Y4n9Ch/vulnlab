@@ -5,6 +5,9 @@ if (isset($_POST['url'])) {
     $url = $_POST['url'];
     // 漏洞：直接请求用户指定的URL
     $result = @file_get_contents($url);
+    if ($result !== false && preg_match('#^(https?://(127\.|localhost|0\.0\.0\.0|\[::1\])|file://)#i', $url)) {
+        renderChallengeSuccess($challenge, '服务端被指使请求了本机或本地文件资源');
+    }
     if ($result === false) {
         $result = '请求失败：' . h($url);
     }

@@ -17,6 +17,7 @@ if (isset($_GET['page'])) {
                 $output = "403 Forbidden - 需要管理员权限";
             } else {
                 // 漏洞：其他admin路径不检查
+                renderChallengeSuccess($challenge, '路径校验被绕过，未登录访问到了管理页面');
                 $output = "欢迎访问管理页面: {$page}";
             }
         } else {
@@ -32,7 +33,7 @@ if (isset($_GET['page'])) {
 <p>管理页面的访问控制存在路径绕过漏洞。</p>
 
 <form method="GET">
-    <input type="hidden" name="id" value="<?= h($_GET['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= h($_GET['cid'] ?? '') ?>">
     <label>页面路径</label>
     <input type="text" name="page" placeholder="/admin/dashboard" value="<?= h($_GET['page'] ?? '') ?>">
     <button type="submit" class="btn btn-primary">访 问</button>
